@@ -43,8 +43,7 @@ getRepoContributors(repositoryOwner, repository, function(err, result) {
     }
     // Error handling if file path doesnt exist
     if(!fs.existsSync('avatars/')){
-        console.log("The folder avatars does not exist. Please create a folder 'avatars' in your working directory to download the images into.");
-        return 0;
+        fs.mkdirSync('avatars/');
     }
     result.forEach(function(contributor){
         var url = contributor['avatar_url'];
