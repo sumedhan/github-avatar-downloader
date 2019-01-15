@@ -3,6 +3,33 @@ var fs = require('fs');
 require('dotenv').config();
 const access_token = process.env.GITHUB_TOKEN;
 
+//  Function that handles request errors 
+function requestErrors (statusCode) {
+    switch (statusCode) {
+        case 200:
+            // Status OK
+            return 1;
+        case 401: 
+            // Authentication error
+            if(!fs.existsSync('.env')){
+            console.log(`Error ${status}! Please create a .env file. Refer .env.example`);
+            } else if(access_token.length < 0) {
+                console.log(`Error ${status}! Missing token in .env file`);
+            } else {
+            console.log(`Error ${status}! PLease provide a valid token in the .env file. Refer .env.example`);
+            }
+            return 0;
+        case 404:
+            // File not found
+            console.log(`Error ${status}! Please check if you have provided a valid repo owner and name.`);
+            return 0;
+        default:
+            //Any other error
+            console.log('Error ${status}. Try again!');
+            return 0;    
+    }
+}
+
 //This function gets the contributors for a given repository and parses an object to the call back function
 function getRepoContributors(repoOwner, repoName, cb) {
 
@@ -20,27 +47,8 @@ function getRepoContributors(repoOwner, repoName, cb) {
         //Error handling for request failiures
 
         var status = res.statusCode;
-        switch (status) {
-            case 200:
-                // Status OK
-                cb(err, content);
-                return;
-            case 401: 
-                // Authentication error
-                if(!fs.existsSync('.env')){
-                console.log(`Error ${status}! Please create a .env file. Refer .env.example`);
-                } else {
-                console.log(`Error ${status}! PLease provide a valid token in the .env file. Refer .env.example`);
-                }
-                return;
-            case 404:
-                // File not found
-                console.log(`Error ${status}! Please check if you have provided a valid repo owner and name.`);
-                return;
-            default:
-                //Any other error
-                console.log('Error ${status}');
-                return;    
+        if(status) {
+            cb(err, content);
         }
         });
 }
