@@ -20,7 +20,11 @@ function getRepoContributors(repoOwner, repoName, cb) {
         switch (status) {
             case 401: 
                 // Authentication error
-                console.log(`Error ${status}! Please check if you have provided a valid token in the .env file.`);
+                if(!fs.existsSync('.env')){
+                console.log(`Error ${status}! Please create a .env file. Refer .env.example`);
+                } else {
+                console.log(`Error ${status}! PLease provide a valid token in the .env file. Refer .env.example`);
+                }
                 return;
             case 404:
                 // File not found
