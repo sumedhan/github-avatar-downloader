@@ -80,7 +80,7 @@ typings/
 .dynamodb/
 
 # Authentication Details
-secrets.js
+.env
 
 # Download folders
 test/
