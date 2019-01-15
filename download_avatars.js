@@ -28,13 +28,19 @@ function downloadImageByURL(url,filepath) {
 }
 
 
-getRepoContributors('jquery', 'jquery', function(err, result) {
+
+
+var myArgs = process.argv.slice(2);
+var repositoryOwner = myArgs[0];
+var repository = myArgs[1];
+
+if(repository && repositoryOwner) {
+getRepoContributors(repositoryOwner, repository, function(err, result) {
     //Call back function declaration. The callback functions access the resulting object to access each contributor's avatar URL
     if(err) {
     console.log('Errors:', err);
     return 0;
     }
-    console.log("Downloading...");
     result.forEach(function(contributor){
         var url = contributor['avatar_url'];
         var filepath = 'avatars/' + contributor.login + '.jpg';
@@ -42,3 +48,6 @@ getRepoContributors('jquery', 'jquery', function(err, result) {
     })
     console.log("Downloaded images.");
 });
+} else {
+    console.log("Error! Enter two arguments that specify the repo owner and repo name. Format: node download_avatar.js <owner> <repo>");
+}
