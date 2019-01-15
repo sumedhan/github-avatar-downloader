@@ -15,6 +15,20 @@ function getRepoContributors(repoOwner, repoName, cb) {
     }
     request(options, function(err, res, body) {
         var content = JSON.parse(body);
+        //Error handling for request failiures
+        var status = res.statusCode;
+        switch (status) {
+            case 401: 
+                // Authentication error
+                console.log(`Error ${status}! Please check if you have provided a valid token in the .env file.`);
+                return;
+            case 404:
+                // File not found
+                console.log(`Error ${status}! Please check if you have provided a valid repo owner and name.`);
+                return;
+
+                
+        }
         cb(err, content);
         });
 }
@@ -33,8 +47,8 @@ var myArgs = process.argv.slice(2);
 var repositoryOwner = myArgs[0];
 var repository = myArgs[1];
 
-//Checks if argument have been passed
-if(repository && repositoryOwner) {
+//Checks if two and only two arguments have been passed
+if(repository && repositoryOwner && myArgs.length === 2 ) {
 getRepoContributors(repositoryOwner, repository, function(err, result) {
     //Call back function declaration. The callback functions access the resulting object to access each contributor's avatar URL
     if(err) {
@@ -52,5 +66,6 @@ getRepoContributors(repositoryOwner, repository, function(err, result) {
     });
 });
 } else {
-    console.log("Error! Enter two arguments that specify the repo owner and repo name. Format: node download_avatar.js <owner> <repo>");
+    console.log("Error! Enter two arguments that specify the repo owner and repo name in the following format:");
+    console.log("node download_avatar.js <owner> <repo>");
 }
