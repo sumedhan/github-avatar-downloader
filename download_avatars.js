@@ -8,14 +8,15 @@ function getRepoContributors(repoOwner, repoName, cb) {
 
     var options = {
         url: 'https://api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors',
+        qs: {
+            access_token: access_token
+        },
         headers: {
             'User-Agent': 'sumedhan',
-            'Authorization': 'token ' + access_token
         }
     }
     request(options, function(err, res, body) {
         var content = JSON.parse(body);
-<<<<<<< HEAD
         //Error handling for request failiures
         var status = res.statusCode;
         switch (status) {
@@ -30,12 +31,8 @@ function getRepoContributors(repoOwner, repoName, cb) {
             case 404:
                 // File not found
                 console.log(`Error ${status}! Please check if you have provided a valid repo owner and name.`);
-                return;
-
-                
+                return;     
         }
-=======
->>>>>>> parent of b885f0b... Logs errors for authentication and valid repo owner and name
         cb(err, content);
         });
 }
