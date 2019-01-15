@@ -18,8 +18,13 @@ function getRepoContributors(repoOwner, repoName, cb) {
     request(options, function(err, res, body) {
         var content = JSON.parse(body);
         //Error handling for request failiures
+
         var status = res.statusCode;
         switch (status) {
+            case 200:
+                // Status OK
+                cb(err, content);
+                return;
             case 401: 
                 // Authentication error
                 if(!fs.existsSync('.env')){
@@ -31,9 +36,12 @@ function getRepoContributors(repoOwner, repoName, cb) {
             case 404:
                 // File not found
                 console.log(`Error ${status}! Please check if you have provided a valid repo owner and name.`);
-                return;     
+                return;
+            default:
+                //Any other error
+                console.log('Error ${status}');
+                return;    
         }
-        cb(err, content);
         });
 }
 
@@ -63,6 +71,7 @@ getRepoContributors(repositoryOwner, repository, function(err, result) {
     if(!fs.existsSync('avatars/')){
         fs.mkdirSync('avatars/');
     }
+    console.log("Downloading....");
     result.forEach(function(contributor){
         var url = contributor['avatar_url'];
         var filepath = 'avatars/' + contributor.login + '.jpg';
