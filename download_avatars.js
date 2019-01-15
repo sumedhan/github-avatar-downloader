@@ -29,12 +29,16 @@ function downloadImageByURL(url,filepath) {
 
 
 getRepoContributors('jquery', 'jquery', function(err, result) {
-    //Call back function declaration. The callback functions access the resuly object to access each contributor's avatar URL
+    //Call back function declaration. The callback functions access the resulting object to access each contributor's avatar URL
+    if(err) {
     console.log('Errors:', err);
+    return 0;
+    }
+    console.log("Downloading...");
     result.forEach(function(contributor){
         var url = contributor['avatar_url'];
         var filepath = 'avatars/' + contributor.login + '.jpg';
         downloadImageByURL(url, filepath);
     })
+    console.log("Downloaded images.");
 });
-
