@@ -34,6 +34,7 @@ var myArgs = process.argv.slice(2);
 var repositoryOwner = myArgs[0];
 var repository = myArgs[1];
 
+//Checks if argument have been passed
 if(repository && repositoryOwner) {
 getRepoContributors(repositoryOwner, repository, function(err, result) {
     //Call back function declaration. The callback functions access the resulting object to access each contributor's avatar URL
