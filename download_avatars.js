@@ -1,5 +1,4 @@
 var request = require('request');
-var authToken = require('./secrets.js');
 var fs = require('fs');
 require('dotenv').config();
 const access_token = process.env.GITHUB_TOKEN;
@@ -42,13 +41,16 @@ getRepoContributors(repositoryOwner, repository, function(err, result) {
     console.log('Errors:', err);
     return 0;
     }
+    // Error handling if file path doesnt exist
+    if(!fs.existsSync('avatars/')){
+        console.log("The folder avatars does not exist. Please create a folder 'avatars' in your working directory to download the images into.");
+        return 0;
+    }
     result.forEach(function(contributor){
         var url = contributor['avatar_url'];
-
         var filepath = 'avatars/' + contributor.login + '.jpg';
         downloadImageByURL(url, filepath);
-    })
-    console.log("Downloaded images.");
+    });
 });
 } else {
     console.log("Error! Enter two arguments that specify the repo owner and repo name. Format: node download_avatar.js <owner> <repo>");
